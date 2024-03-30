@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16.2
+    container_name: ${PROJECT_SLUG}_db
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+
+  backend:
+    container_name: ${PROJECT_SLUG}_backend
+    build:
+      context: .
+      dockerfile: ./docker/backend/${ENV_TYPE}/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app
+      - static_files:/app/static
+    depends_on:
+      - db
+    env_file: ./.env
+
+  frontend:
+    container_name: ${PROJECT_SLUG}_frontend
+    build:
+      context: .
+      dockerfile: ./docker/frontend/${ENV_TYPE}/Dockerfile
+      args:
+        - NODE_ENV=${ENV_TYPE}
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+      - ./logs/frontend:/root/.npm/_logs
+    depends_on:
+      - backend
+    env_file: ./.env
+
+  nginx:
+    image: nginx:latest
+    container_name: ${PROJECT_SLUG}_nginx
+    restart: unless-stopped
+    ports:
+      - 8080:80
+      - 4443:433
+    volumes:
+      - static_files:/app/static
+      - ./frontend/public:/app/public
+      - ./docker/nginx/:/etc/nginx:ro
+      - ./logs/nginx/:/var/log/nginx
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+  static_files:

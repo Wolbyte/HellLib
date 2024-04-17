@@ -1,51 +1,56 @@
-import Image from "next/image";
-
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
+import PersonIcon from "@mui/icons-material/Person";
 import Typography from "@mui/material/Typography";
+
+import SearchField from "../components/SearchField";
+import ContainedImage from "../components/ContainedImage";
+
+const rootContainerSX = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100vh",
+};
+
+const flexGridItemSX = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
 export default function Home() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={1} p={2}>
+    <Container sx={rootContainerSX}>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        p={5}
+        spacing={3}
+      >
+        <Grid item xs={12} sx={flexGridItemSX}>
+          <ContainedImage src="sampad.svg" alt="sampad_logo" gutterBottom />
+
+          <Typography variant="h3" fontWeight="bold" align="center">
+            به کتابخانه‌ی حلی خوش آمدید! 👋
+          </Typography>
+        </Grid>
+
         <Grid item xs={12}>
-          <Typography
-            align="center"
-            noWrap
-            variant="h3"
-            p={2}
-            sx={{ backgroundColor: "warning.main", borderRadius: "5px" }}
-          >
-            xs = 12 --{">"} 100% (12/12)
-          </Typography>
+          <SearchField />
         </Grid>
-        <Grid item xs={6}>
-          <Typography
-            align="center"
-            noWrap
-            variant="h4"
-            p={2}
-            sx={{ backgroundColor: "success.main", borderRadius: "5px" }}
-          >
-            xs = 6 --{">"} 50% (6/12)
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography
-            align="center"
-            variant="h4"
-            p={2}
-            sx={{ backgroundColor: "error.main", borderRadius: "5px" }}
-          >
-            پروژه وزیرمتن یک خانواده تایپ‌فیس فارسی-عربی با ۹ وزن است که در سال
-            ۱۳۹۴ با نام «وزیر» آغاز شد و در طول این سال‌ها طراحی و توسعه آن
-            ادامه یافت. فونت وزیرمتن شکلی ساده و روان دارد و می‌توان از آن در
-            اغلب زمینه‌ها استفاده کرد. برای حروف لاتین از فونت Roboto استفاده
-            شده است. این یک نرم افزار آزاد و متن‌باز است.
-          </Typography>
+
+        <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+          <Button variant="contained" startIcon={<PersonIcon />} size="large">
+            نام‌نویسی دانش‌آموز
+          </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 }

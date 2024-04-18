@@ -7,8 +7,8 @@ import SearchIcon from "@mui/icons-material/Search";
 
 export default function SearchField() {
   return (
-    <form dir="rtl" style={{ display: "flex" }}>
-      <Button variant="contained" type="submit" color="primary" sx={{ ml: 1 }}>
+    <form style={{ display: "flex" }}>
+      <Button variant="contained" type="submit" color="primary" sx={{ mr: 1 }}>
         <SearchIcon />
       </Button>
       <TextField

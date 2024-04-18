@@ -2,11 +2,11 @@ import "./globals.css";
 
 // The version should match the installed NextJs (currently v14)
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
-
 import theme from "../theme";
+
+import RtlCacheProvider from "../components/RtlCacheProvider";
 
 export const metadata = {
   title: "کتاب‌خانه",
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {children}
+            <RtlCacheProvider>{children}</RtlCacheProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

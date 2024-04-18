@@ -30,17 +30,14 @@ services:
     build:
       context: .
       dockerfile: ./docker/frontend/${ENV_TYPE}/Dockerfile
-      args:
-        - NODE_ENV=${ENV_TYPE}
     restart: unless-stopped
     volumes:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
-      - ./logs/frontend:/root/.npm/_logs
     depends_on:
       - backend
-    env_file: ./.env
+    env_file: .env
 
   nginx:
     image: nginx:latest
@@ -53,7 +50,6 @@ services:
       - static_files:/app/static
       - ./frontend/public:/app/public
       - ./docker/nginx/:/etc/nginx:ro
-      - ./logs/nginx/:/var/log/nginx
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - backend

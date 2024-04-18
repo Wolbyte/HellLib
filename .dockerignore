@@ -1,12 +1,21 @@
-.tmp/
-.cache/
+# Backend
+**/__pycache__/
+
+# Frontend
+**/.next/
+**/node_modules/
+
+# Git
 .git/
-build/
-node_modules/
-node_modules
 .gitignore
-.next/
+
+# Docker
 .dockerignore
 Dockerfile
 docker-compose.yml
+
+# Misc
+.cache/
+.tmp/
 nginx/
+

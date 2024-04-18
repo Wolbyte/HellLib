@@ -1,27 +1,25 @@
-FROM node:20.11-alpine
+FROM node:20.11-alpine AS base
 
-# Set /app as the working directory
+
+FROM base AS deps
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-# to the /app working directory
-COPY ./frontend/package*.json /app/
-COPY ./.env /app/
+# Install dependencies
+COPY ./frontend/package*.json ./
+RUN npm ci
 
-# Install dependencies in /app
-RUN npm install
 
-# Copy the rest of our Next.js folder into /app
-COPY ./frontend /app
+FROM base AS builder
+WORKDIR /app
 
-# For production build
-ENV NODE_ENV=${NODE_ENV}
+COPY --from=deps /app/node_modules ./node_modules
 
-# Build next.js for production
+COPY ./frontend/package*.json .
+COPY ./frontend/src ./src
+COPY ./frontend/next.config.js .
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN npm run build
 
-# Ensure port 3005 is accessible to our system
-EXPOSE 3000
-
-# Run development server
-CMD [ "npm", "run", "start" ]
+CMD ["npm", "run", "start"]

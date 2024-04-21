@@ -1,23 +1,22 @@
-FROM node:20.11-alpine
+FROM node:20.11-alpine AS base
 
-# Set /app as the working directory
+
+FROM base AS deps
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-# to the /app working directory
-COPY ./frontend/package*.json /app/
-COPY ./.env /app/
-
-ENV NEXT_TELEMETRY_DISABLED 1
-
-# Install dependencies in /app
+# Install dependencies
+COPY ./frontend/package*.json ./
 RUN npm install
 
-# Copy the rest of our Next.js folder into /app
-COPY ./frontend /app
 
-# Ensure port 3005 is accessible to our system
-EXPOSE 3000
+FROM base AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+
+COPY ./frontend .
+
+ENV NEXT_TELEMETRY_DISABLED 1
 
 # Run development server
 CMD [ "npm", "run", "dev" ]

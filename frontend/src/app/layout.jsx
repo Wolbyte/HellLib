@@ -5,8 +5,9 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-
+import ResponsiveDrawer from "../components/Sidebar";
 import RtlCacheProvider from "../components/RtlCacheProvider";
+import Grid from "@mui/material/Grid";
 
 export const metadata = {
   title: "کتاب‌خانه",
@@ -23,6 +24,11 @@ export default function RootLayout({ children }) {
             <RtlCacheProvider>{children}</RtlCacheProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
+        <Grid container justifyContent="flex-start" align="right">
+          <Grid item>
+            <ResponsiveDrawer />
+          </Grid>
+        </Grid>
       </body>
     </html>
   );

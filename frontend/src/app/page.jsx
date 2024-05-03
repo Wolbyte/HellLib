@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 import PersonIcon from "@mui/icons-material/Person";
 import Typography from "@mui/material/Typography";
 
-import ResponsiveDrawer from "../components/Sidebar";
 import SearchField from "../components/SearchField";
 import ContainedImage from "../components/ContainedImage";
 
@@ -26,10 +25,6 @@ const flexGridItemSX = {
 export default function Home() {
   return (
     <Container sx={rootContainerSX}>
-      <Grid align="left">
-          <ResponsiveDrawer>
-          </ResponsiveDrawer>
-      </Grid>
       <Grid
         container
         direction="row"

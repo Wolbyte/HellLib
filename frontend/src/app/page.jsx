@@ -25,14 +25,7 @@ const flexGridItemSX = {
 export default function Home() {
   return (
     <Container sx={rootContainerSX}>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        p={5}
-        spacing={3}
-      >
+      <Grid container direction="row" justifyContent="center" alignItems="center" p={5} spacing={3}>
         <Grid item xs={12} sx={flexGridItemSX}>
           <ContainedImage src="sampad.svg" alt="sampad_logo" gutterBottom />
 

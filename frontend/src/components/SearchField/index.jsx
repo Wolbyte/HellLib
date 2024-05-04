@@ -12,7 +12,6 @@ export default function SearchField() {
         <SearchIcon />
       </Button>
       <TextField
-        name="q"
         id="search_bar"
         className="text"
         label="جست‌وجوی کتاب"

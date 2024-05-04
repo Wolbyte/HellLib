@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-from django.shortcuts import render
-
-# Create your views here.
-=======
 from rest_framework.request import Request
 from rest_framework.response import Response
 from .serializers import BookSerializer
@@ -29,4 +24,3 @@ def AddBook(request : Request):
         book.copies += copies
         book.save()
         return Response(serializer.data, status.HTTP_202_ACCEPTED)
->>>>>>> b90f601564e416e34b0c54a53d16b0e1e9274b3d

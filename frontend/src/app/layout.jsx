@@ -8,10 +8,18 @@ import theme from "../theme";
 import ResponsiveDrawer from "../components/Sidebar";
 import RtlCacheProvider from "../components/RtlCacheProvider";
 import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
 
 export const metadata = {
   title: "کتاب‌خانه",
   description: "سامانه مدیریت کتاب‌خانه حلی ۷",
+};
+
+const rootContainerSX = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100vh",
 };
 
 export default function RootLayout({ children }) {
@@ -21,14 +29,14 @@ export default function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <RtlCacheProvider>{children}</RtlCacheProvider>
+            <RtlCacheProvider>
+              <Container sx={rootContainerSX}>
+                <ResponsiveDrawer />
+                {children}
+              </Container>
+            </RtlCacheProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
-        <Grid container justifyContent="flex-start" align="right">
-          <Grid item>
-            <ResponsiveDrawer />
-          </Grid>
-        </Grid>
       </body>
     </html>
   );

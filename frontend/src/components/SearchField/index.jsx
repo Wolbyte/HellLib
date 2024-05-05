@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 export default function SearchField() {
   return (
-    <form style={{ display: "flex" }}>
+    <form action="/search/books" style={{ display: "flex" }}>
       <Button variant="contained" type="submit" color="primary" sx={{ mr: 1 }}>
         <SearchIcon />
       </Button>

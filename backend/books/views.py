@@ -4,6 +4,8 @@ from .serializers import BookSerializer
 from .models import Book
 from rest_framework.decorators import api_view
 from rest_framework import status
+import unicodedata
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 @api_view(['POST'])
@@ -24,3 +26,45 @@ def AddBook(request : Request):
         book.copies += copies
         book.save()
         return Response(serializer.data, status.HTTP_202_ACCEPTED)
+    
+
+
+
+
+def normalize_text(text):
+    try:
+        normalized_text = unicodedata.normalize("NFC", str(text))
+        text = ""
+
+        for c in normalized_text:
+            if unicodedata.category(c) == "Mn":
+                continue
+            # Nim faseleh
+            if c == "\u200c":
+                c = " "
+            # Teh gerd
+            elif c == "\u0629":
+                c = "ه"
+
+            text += c
+
+    except NameError:
+        pass
+
+    return text
+
+
+
+@api_view(['GET'])
+def SearchBook(request : Request, title:str):
+    try:
+        books = Book.objects.annotate(
+            similarity=TrigramSimilarity("title", title),
+        ).filter(
+            similarity__gt=0.3
+        ).order_by('-similarity')
+    except Book.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = BookSerializer(books, many=True)
+    print(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)

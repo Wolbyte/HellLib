@@ -1,26 +1,50 @@
+from django.contrib.postgres.search import TrigramSimilarity
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-from .serializers import BookSerializer
+
 from .models import Book
-from rest_framework.decorators import api_view
-from rest_framework import status
+from .serializers import BookSerializer
 
 
-@api_view(['POST'])
-def AddBook(request : Request):
-    serializer = BookSerializer(data = request.data)
+@api_view(["POST"])
+def AddBook(request: Request):
+    serializer = BookSerializer(data=request.data)
 
-    title = serializer.initial_data['title']
-    publisher = serializer.initial_data['publisher']
-    author = serializer.initial_data['author']
-    copies = serializer.initial_data['copies']
+    title = serializer.initial_data["title"]
+    publisher = serializer.initial_data["publisher"]
+    author = serializer.initial_data["author"]
+    copies = serializer.initial_data["copies"]
 
-    book = Book.objects.filter(title = title, publisher = publisher, author = author).first()
+    book = Book.objects.filter(
+        title=title,
+        publisher=publisher,
+        author=author,
+    ).first()
 
-    if serializer.is_valid() and book == None:
+    if serializer.is_valid() and book is None:
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
     else:
         book.copies += copies
         book.save()
         return Response(serializer.data, status.HTTP_202_ACCEPTED)
+
+
+@api_view(["GET"])
+def SearchBook(request: Request, title: str):
+    try:
+        books = (
+            Book.objects.annotate(
+                similarity=TrigramSimilarity("title", title),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("-similarity")
+        )
+    except Book.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = BookSerializer(books, many=True)
+
+    return Response({"books": serializer.data}, status=status.HTTP_200_OK)

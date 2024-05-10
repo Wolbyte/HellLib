@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-2wp=65e&ysb(6clg*p=v9g4xiybyq4xbp0=b-hlqrcfb763x)*
 
 DEBUG = os.environ.get("ENV_TYPE") == "development"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.postgres",
     "django.contrib.staticfiles",
+    "rest_framework",
+    # HellLib
     "books",
-    "users"
+    "users",
 ]
 
 MIDDLEWARE = [

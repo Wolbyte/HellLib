@@ -33,7 +33,7 @@ def AddBook(request: Request):
 
 
 @api_view(["GET"])
-def SearchBook(request: Request, title: str):
+def SearchBook(_, title: str):
     try:
         books = (
             Book.objects.annotate(

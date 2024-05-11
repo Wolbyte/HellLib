@@ -1,7 +1,14 @@
 "use client";
-import * as React from "react";
+
 import { useState } from "react";
+
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Paper from "@mui/material/Paper";
+import PropTypes from "prop-types";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,43 +16,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-function createData(name, writer, publisher, copies) {
-  return {
-    name,
-    writer,
-    publisher,
-    copies,
-    history: [
-      {
-        customerName: "محمد",
-        customerLastName: "سومبول",
-        customerClassroom: 114,
-        repossessionDate: "2020-01-05",
-      },
-      {
-        customerName: "قاسم",
-        customerLastName: "ابدخافی",
-        customerClassroom: 115,
-        repossessionDate: "2020-01-02",
-      },
-    ],
-  };
-}
+import { enToFaDigit } from "@/helpers";
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
@@ -98,7 +78,7 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
@@ -113,27 +93,26 @@ Row.propTypes = {
         customerName: PropTypes.string.isRequired,
         customerLastName: PropTypes.string.isRequired,
         repossessionDate: PropTypes.string.isRequired,
-      })
+      }),
     ).isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-const rows = [
-  createData("روزی روزگاری قلمبه", "قلمبه", "انتشارات قلمبه", 24, 3.99),
-  createData("روزی روزگاری تلمبه", "تلمبه", "انتشارات تلمبه", 37, 4.99),
-  createData("روزی روزگاری سلمبه", "سلمبه", "انتشارات سلمبه", 24, 3.79),
-  createData("روزی روزگاری ملمبه", "ملمبه", "انتشارات ملمبه", 67, 2.5),
-  createData("روزی روزگاری فلمبه", "فلمبه", "انتشارات فلمبه", 49, 1.5),
-  createData("روزی روزگاری شلمبه", "شلمبه", "انتشارات شلمبه", 50, 2),
-  createData("روزی روزگاری ذلمبه", "ذلمبه", "انتشارات ذلمبه", 50, 2),
-];
+function getRowsPerPage() {
+  return [
+    { label: "۵", value: 5 },
+    { label: "۱۰", value: 10 },
+    { label: "۲۵", value: 25 },
+    { label: "۱۰۰", value: 100 },
+  ];
+}
 
-export default function CollapsibleTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+export default function CollapsibleTable({ rows }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -149,10 +128,10 @@ export default function CollapsibleTable() {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>اسم کتاب</TableCell>
+              <TableCell>نام کتاب</TableCell>
               <TableCell>نویسنده</TableCell>
               <TableCell>ناشر</TableCell>
-              <TableCell>کپی ها</TableCell>
+              <TableCell>کپی‌ها</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -165,8 +144,14 @@ export default function CollapsibleTable() {
         </Table>
       </TableContainer>
       <TablePagination
-        labelRowsPerPage={"تعداد ردیف ها:"}
-        rowsPerPageOptions={[5, 10, 25, 100]}
+        labelRowsPerPage={"تعداد ردیف‌های هر برگه:"}
+        rowsPerPageOptions={getRowsPerPage()}
+        labelDisplayedRows={({ from, to, count }) => {
+          const faFrom = enToFaDigit(from.toString());
+          const faTo = enToFaDigit(to.toString());
+          const faCount = enToFaDigit(count.toString());
+          return `${faFrom}–${faTo} از ${count !== -1 ? faCount : `+${faTo}`}`;
+        }}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

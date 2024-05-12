@@ -1,6 +1,8 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState } from "react";
+
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -14,11 +16,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 
 const drawerWidth = 200;
 
-function ResponsiveDrawer(props) {
-  const { window } = props;
+function ResponsiveDrawer() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -37,25 +39,50 @@ function ResponsiveDrawer(props) {
     }
   };
 
-  const drawer = (
-    <div>
-      <List>
-        {[
-          { text: "خانه", icon: <HomeIcon /> },
-          { text: "دانش‌آموزان", icon: <AccountCircleIcon /> },
-          { text: "کتاب‌ها", icon: <MenuBookIcon /> },
-          { text: "تاریخچه", icon: <HistoryIcon /> },
-        ].map((item, index) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const DrawerContent = () => {
+    const currentPath = usePathname();
+
+    return (
+      <div>
+        <List>
+          {[
+            { text: "خانه", icon: <HomeIcon />, url: "/" },
+            {
+              text: "جست‌وجو",
+              icon: <SearchIcon />,
+              url: "/search/books",
+            },
+            {
+              text: "دانش‌آموزان",
+              icon: <AccountCircleIcon />,
+              url: "/students",
+            },
+            { text: "کتاب‌ها", icon: <MenuBookIcon />, url: "/books" },
+            { text: "تاریخچه", icon: <HistoryIcon />, url: "/history" },
+          ].map((item, _index) => (
+            <ListItem key={item.text}>
+              <ListItemButton
+                href={item.url}
+                selected={currentPath == item.url}
+                sx={{
+                  borderRadius: 3,
+                  "&.Mui-selected": {
+                    backgroundColor: "rgba(25, 118, 210, 0.25)",
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: "rgba(25, 118, 210, 0.35)",
+                  },
+                }}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </div>
+    );
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -89,7 +116,7 @@ function ResponsiveDrawer(props) {
             },
           }}
         >
-          {drawer}
+          <DrawerContent />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -103,7 +130,7 @@ function ResponsiveDrawer(props) {
           }}
           open
         >
-          {drawer}
+          <DrawerContent />
         </Drawer>
       </Box>
     </Box>

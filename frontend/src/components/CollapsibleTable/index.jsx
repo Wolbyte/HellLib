@@ -62,14 +62,12 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.repossessionDate}>
+                    <TableRow>
                       <TableCell>{historyRow.customerName}</TableCell>
                       <TableCell>{historyRow.customerLastName}</TableCell>
                       <TableCell>{historyRow.customerClassroom}</TableCell>
-                      <TableCell>{historyRow.customerClassroom}</TableCell>
-                      <TableCell component="th" scope="row">
-                        {historyRow.repossessionDate}
-                      </TableCell>
+                      <TableCell>{historyRow.customerID}</TableCell>
+                      <TableCell>{historyRow.repossessionDate}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -93,7 +91,7 @@ Row.propTypes = {
         customerName: PropTypes.string.isRequired,
         customerLastName: PropTypes.string.isRequired,
         repossessionDate: PropTypes.string.isRequired,
-      }),
+      })
     ).isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,

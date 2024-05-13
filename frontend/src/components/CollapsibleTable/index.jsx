@@ -63,13 +63,11 @@ function Row(props) {
                 <TableBody>
                   {row.history.map((historyRow) => (
                     <TableRow key={historyRow.repossessionDate}>
-                      <TableCell>{historyRow.customerName}</TableCell>
-                      <TableCell>{historyRow.customerLastName}</TableCell>
-                      <TableCell>{historyRow.customerClassroom}</TableCell>
-                      <TableCell>{historyRow.customerClassroom}</TableCell>
-                      <TableCell component="th" scope="row">
-                        {historyRow.repossessionDate}
-                      </TableCell>
+                      <TableCell>{historyRow.studentName}</TableCell>
+                      <TableCell>{historyRow.studentLastName}</TableCell>
+                      <TableCell>{historyRow.studentClassroom}</TableCell>
+                      <TableCell>{historyRow.studentID}</TableCell>
+                      <TableCell>{historyRow.repossessionDate}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -89,9 +87,9 @@ Row.propTypes = {
     publisher: PropTypes.number.isRequired,
     history: PropTypes.arrayOf(
       PropTypes.shape({
-        customerClassroom: PropTypes.number.isRequired,
-        customerName: PropTypes.string.isRequired,
-        customerLastName: PropTypes.string.isRequired,
+        studentClassroom: PropTypes.number.isRequired,
+        studentName: PropTypes.string.isRequired,
+        studentLastName: PropTypes.string.isRequired,
         repossessionDate: PropTypes.string.isRequired,
       }),
     ).isRequired,

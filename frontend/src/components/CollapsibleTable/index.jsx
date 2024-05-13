@@ -62,7 +62,7 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
-                    <TableRow>
+                    <TableRow key={historyRow.repossessionDate}>
                       <TableCell>{historyRow.customerName}</TableCell>
                       <TableCell>{historyRow.customerLastName}</TableCell>
                       <TableCell>{historyRow.customerClassroom}</TableCell>

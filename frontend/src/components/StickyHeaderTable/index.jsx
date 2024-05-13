@@ -1,7 +1,6 @@
-"use client";
+"use client;";
 
 import { useState } from "react";
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,35 +12,6 @@ import TableRow from "@mui/material/TableRow";
 
 import { enToFaDigit } from "@/helpers";
 
-const columns = [
-  { id: "customerName", label: "نام", minWidth: 150 },
-  { id: "customerLastName", label: "نام خانوادگی", minWidth: 150 },
-  { id: "customerClassroom", label: "کلاس", minWidth: 150 },
-  { id: "customerID", label: "کد ملی", minWidth: 150 },
-  { id: "repossessionDate", label: "تاریخ بازپس گیری", minWidth: 150 },
-];
-
-function createData(
-  customerName,
-  customerLastName,
-  customerClassroom,
-  customerID,
-  repossessionDate
-) {
-  return {
-    customerName,
-    customerLastName,
-    customerClassroom,
-    customerID,
-    repossessionDate,
-  };
-}
-
-const rows = [
-  createData("قاسم","ابدخافی","۱۱۵","۱۲۳۴۵۶۷۸۹۰","۱۴۰۳-۰۶-۱۷"),
-  createData("محمد","سومبول","۱۱۴","۰۹۸۷۶۵۴۳۲۱","۱۴۰۳-۱۱-۰۵"),
-];
-
 function getRowsPerPage() {
   return [
     { label: "۵", value: 5 },
@@ -51,7 +21,7 @@ function getRowsPerPage() {
   ];
 }
 
-export default function StickyHeadTable() {
+export default function StickyHeaderTable({ rows, columns }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -89,7 +59,7 @@ export default function StickyHeadTable() {
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={row.customerLastName}
+                    key={row.studentLastName}
                   >
                     {columns.map((column) => {
                       const value = row[column.id];

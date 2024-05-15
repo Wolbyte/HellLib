@@ -1,7 +1,9 @@
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.request import Request
+from rest_framework import generics, mixins
 
-from .models import Student
-from .serializers import StudentSerializer
+from .models import Student, BorrowRecord
+from .serializers import StudentSerializer, BorrowRecordSerializer
 
 
 class StudentsAPIView(ListCreateAPIView):
@@ -27,3 +29,13 @@ class StudentsAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         return Student.objects.all()
+    
+class BorrowApiView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = BorrowRecord.objects.all()
+    serializer_class = BorrowRecordSerializer
+
+    def get(self, request: Request):
+        return self.list(request)
+    
+    def post(self, request: Request):
+        return self.create(request)

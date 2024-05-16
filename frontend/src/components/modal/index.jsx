@@ -5,7 +5,10 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Virtualize from "../AutoCompleteInput";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalaliV3";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { faIR } from "date-fns-jalali/locale/fa-IR";
 
 const style = {
   position: "absolute",
@@ -17,6 +20,8 @@ const style = {
   border: "2px solid #E0E0E0",
   boxShadow: 24,
   p: 4,
+  display: "flex",
+  flexDirection: "column",
 };
 
 export default function BasicModal(props) {
@@ -24,6 +29,18 @@ export default function BasicModal(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const rowName = props.rowData;
+  const [cleared, setCleared] = React.useState(false);
+
+  React.useEffect(() => {
+    if (cleared) {
+      const timeout = setTimeout(() => {
+        setCleared(false);
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    }
+    return () => {};
+  }, [cleared]);
 
   return (
     <div>
@@ -36,11 +53,30 @@ export default function BasicModal(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-             تحویل {rowName} 
+            تحویل: {rowName}
           </Typography>
-          {/* <Virtualize /> */}
-          <TextField margin="dense" id="outlined-basic" label="کد ملی" variant="outlined" />
-          {/* <DatePicker label="Basic date picker" /> */}
+          <Virtualize />
+          {/* <TextField margin="dense" id="outlined-basic" label="کد ملی" variant="outlined" /> */}
+          <LocalizationProvider
+            adapterLocale={faIR}
+            dateAdapter={AdapterDateFnsJalali}
+            localeText={{
+              fieldYearPlaceholder: () => "سال",
+              fieldMonthPlaceholder: () => "ماه",
+              fieldDayPlaceholder: () => "روز",
+            }}
+          >
+            <DatePicker
+              sx={{ mt: 2 }}
+              label="انتخاب تاریخ بازپس گیری"
+              slotProps={{
+                field: { clearable: true, onClear: () => setCleared(true) },
+              }}
+            />
+          </LocalizationProvider>
+          <Button sx={{ mt: 2 }} variant="contained" color="success" type="submit">
+            تایید
+          </Button>
         </Box>
       </Modal>
     </div>

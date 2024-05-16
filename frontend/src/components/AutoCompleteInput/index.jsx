@@ -36,7 +36,7 @@ function renderRow(props) {
 
 const OuterElementContext = React.createContext({});
 
-const OuterElementType = React.forwardRef(function outerElementRef(props, ref) {
+const OuterElementType = React.forwardRef(function OuterElementRef(props, ref) {
   const outerProps = React.useContext(OuterElementContext);
   return <div ref={ref} {...props} {...outerProps} />;
 });

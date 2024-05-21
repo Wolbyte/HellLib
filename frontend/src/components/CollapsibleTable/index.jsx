@@ -18,8 +18,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
+import BasicModal from "@/components/BasicModal";
 import { enToFaDigit } from "@/helpers";
-import BasicModal from "../modal";
 
 function Row(props) {
   const { row } = props;
@@ -43,7 +43,9 @@ function Row(props) {
         <TableCell>{row.writer}</TableCell>
         <TableCell>{row.publisher}</TableCell>
         <TableCell>{row.copies}</TableCell>
-        <TableCell><BasicModal rowData={row.name} /></TableCell>
+        <TableCell>
+          <BasicModal rowData={row.name} />
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

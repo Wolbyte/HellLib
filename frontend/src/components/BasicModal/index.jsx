@@ -1,13 +1,15 @@
 import * as React from "react";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Virtualize from "../AutoCompleteInput";
+
 import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalaliV3";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
 import { faIR } from "date-fns-jalali/locale/fa-IR";
 
 const style = {
@@ -17,7 +19,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #E0E0E0",
+  borderRadius: 2,
   boxShadow: 24,
   p: 4,
   display: "flex",
@@ -74,7 +76,12 @@ export default function BasicModal(props) {
               }}
             />
           </LocalizationProvider>
-          <Button sx={{ mt: 2 }} variant="contained" color="success" type="submit">
+          <Button
+            sx={{ mt: 2 }}
+            variant="contained"
+            color="success"
+            type="submit"
+          >
             تایید
           </Button>
         </Box>

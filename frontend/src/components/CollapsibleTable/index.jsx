@@ -18,6 +18,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
+import BasicModal from "@/components/BasicModal";
 import { enToFaDigit } from "@/helpers";
 
 function Row(props) {
@@ -42,6 +43,9 @@ function Row(props) {
         <TableCell>{row.writer}</TableCell>
         <TableCell>{row.publisher}</TableCell>
         <TableCell>{row.copies}</TableCell>
+        <TableCell>
+          <BasicModal rowData={row.name} />
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -130,6 +134,7 @@ export default function CollapsibleTable({ rows }) {
               <TableCell>نویسنده</TableCell>
               <TableCell>ناشر</TableCell>
               <TableCell>کپی‌ها</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>

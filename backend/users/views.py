@@ -1,4 +1,6 @@
-from rest_framework.generics import ListCreateAPIView
+import re
+
+from rest_framework.generics import ListAPIView, ListCreateAPIView
 
 from .models import Student
 from .serializers import StudentSerializer
@@ -27,3 +29,17 @@ class StudentsAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         return Student.objects.all()
+
+
+class SuggestStudents(ListAPIView):
+    serializer_class = StudentSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get("q", "").strip()
+
+        if not query:
+            return
+
+        return Student.objects.all().filter(
+            national_code__iregex=r"(?mi).*%s.*" % re.escape(query)
+        )[:50]

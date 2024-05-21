@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
+import { debounce } from "@mui/material/utils";
 import ListSubheader from "@mui/material/ListSubheader";
 import Popper from "@mui/material/Popper";
 import PropTypes from "prop-types";
@@ -9,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList } from "react-window";
+import { faToEnDigit } from "@/helpers";
 
 const LISTBOX_PADDING = 8; // px
 
@@ -112,18 +114,6 @@ ListboxComponent.propTypes = {
   children: PropTypes.node,
 };
 
-function random(length) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-
-  for (let i = 0; i < length; i += 1) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-
-  return result;
-}
-
 const StyledPopper = styled(Popper)({
   [`& .${autocompleteClasses.listbox}`]: {
     boxSizing: "border-box",
@@ -134,21 +124,79 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-const OPTIONS = Array.from(new Array(10000))
-  .map(() => random(10 + Math.ceil(Math.random() * 20)))
-  .sort((a, b) => a.toUpperCase().localeCompare(b.toUpperCase()));
-
 export default function Virtualize() {
+  const [options, setOptions] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState("");
+  const [value, setValue] = React.useState(null);
+
+  const fetchWrapper = React.useMemo(
+    () =>
+      debounce(async (query, callback) => {
+        setIsLoading(true);
+        const url = `http://localhost:8080/api/students/suggest?q=${query}`;
+        const response = await fetch(url);
+        callback(await response.json());
+        setIsLoading(false);
+      }, 400),
+    [],
+  );
+
+  React.useEffect(() => {
+    let active = true;
+
+    if (inputValue === "") {
+      setOptions([]);
+      return undefined;
+    }
+
+    fetchWrapper(faToEnDigit(inputValue), (result) => {
+      if (active) {
+        let newOptions = [];
+
+        if (value) {
+          newOptions = [value];
+        }
+
+        if (result) {
+          newOptions = [...newOptions, ...result];
+        }
+
+        setOptions(newOptions);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [value, inputValue, fetchWrapper]);
+
   return (
     <Autocomplete
       sx={{ width: 300, mt: 2 }}
       disableListWrap
       PopperComponent={StyledPopper}
       ListboxComponent={ListboxComponent}
-      options={OPTIONS}
+      options={options}
+      loading={isLoading}
+      getOptionLabel={(opt) => opt.national_code}
+      value={value}
+      onInputChange={(_event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      onChange={(_event, newValue) => {
+        setOptions(newValue ? [newValue, ...options] : options);
+        setValue(newValue);
+      }}
+      loadingText="درحال پردازش..."
+      filterOptions={(x) => x}
       noOptionsText="چیزی پیدا نشد!"
       renderInput={(params) => <TextField {...params} label="کد ملی" />}
-      renderOption={(props, option, state) => [props, option, state.index]}
+      renderOption={(props, option, state) => [
+        props,
+        `${option.national_code} - ${option.first_name} ${option.last_name}`,
+        state.index,
+      ]}
     />
   );
 }

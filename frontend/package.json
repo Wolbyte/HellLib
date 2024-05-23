@@ -25,7 +25,8 @@
     "react-dom": "^18",
     "react-window": "^1.8.10",
     "stylis": "^4.3.1",
-    "stylis-plugin-rtl": "^2.1.1"
+    "stylis-plugin-rtl": "^2.1.1",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "eslint": "^8",

@@ -67,7 +67,7 @@ export default function StickyHeaderTable({ rows, columns }) {
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === "number"
                             ? column.format(value)
-                            : value}
+                            : enToFaDigit(value.toString())}
                         </TableCell>
                       );
                     })}

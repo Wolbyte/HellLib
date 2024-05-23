@@ -2,34 +2,22 @@
 
 import StickyHeaderTable from "@/components/StickyHeaderTable";
 
+import useSWR from "swr";
+
 const columns = [
-  { id: "studentName", label: "نام", minWidth: 150 },
-  { id: "studentLastName", label: "نام خانوادگی", minWidth: 150 },
-  { id: "studentClassroom", label: "کلاس", minWidth: 150 },
-  { id: "studentID", label: "کد ملی", minWidth: 150 },
-];
-
-function createData(
-  studentName,
-  studentLastName,
-  studentClassroom,
-  studentID,
-  repossessionDate,
-) {
-  return {
-    studentName,
-    studentLastName,
-    studentClassroom,
-    studentID,
-    repossessionDate,
-  };
-}
-
-const rows = [
-  createData("قاسم", "ابدخافی", "۱۱۵", "۱۲۳۴۵۶۷۸۹۰", "۱۴۰۳-۰۶-۱۷"),
-  createData("محمد", "سومبول", "۱۱۴", "۰۹۸۷۶۵۴۳۲۱", "۱۴۰۳-۱۱-۰۵"),
+  { id: "first_name", label: "نام", minWidth: 150 },
+  { id: "last_name", label: "نام خانوادگی", minWidth: 150 },
+  { id: "class_number", label: "کلاس", minWidth: 150 },
+  { id: "national_code", label: "کد ملی", minWidth: 150 },
 ];
 
 export default function StudentsPage() {
-  return <StickyHeaderTable rows={rows} columns={columns} />;
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+  const { data, error, isLoading } = useSWR("/api/students", fetcher);
+
+  if (error) return <div>خطایی در دریافت داده‌ها پیش آمد!</div>;
+  if (isLoading) return <div>درحال دریافت داده‌ها...</div>;
+
+  return <StickyHeaderTable rows={data} columns={columns} />;
 }

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { format } from "date-fns-jalali";
+
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -38,11 +40,11 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.title}
         </TableCell>
-        <TableCell>{row.writer}</TableCell>
+        <TableCell>{row.author}</TableCell>
         <TableCell>{row.publisher}</TableCell>
-        <TableCell>{row.copies}</TableCell>
+        <TableCell>{enToFaDigit(row.copies.toString())}</TableCell>
         <TableCell>
           <BasicModal rowData={row.name} />
         </TableCell>
@@ -65,13 +67,21 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.repossessionDate}>
-                      <TableCell>{historyRow.studentName}</TableCell>
-                      <TableCell>{historyRow.studentLastName}</TableCell>
-                      <TableCell>{historyRow.studentClassroom}</TableCell>
-                      <TableCell>{historyRow.studentID}</TableCell>
-                      <TableCell>{historyRow.repossessionDate}</TableCell>
+                  {row.active_history.map((data) => (
+                    <TableRow
+                      key={`${data.return_date}${data.student.national_code}`}
+                    >
+                      <TableCell>{data.student.first_name}</TableCell>
+                      <TableCell>{data.student.last_name}</TableCell>
+                      <TableCell>
+                        {enToFaDigit(data.student.class_number.toString())}
+                      </TableCell>
+                      <TableCell>
+                        {enToFaDigit(data.student.national_code.toString())}
+                      </TableCell>
+                      <TableCell>
+                        {enToFaDigit(format(data.return_date, "yyyy-MM-dd"))}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -86,18 +96,20 @@ function Row(props) {
 
 Row.propTypes = {
   row: PropTypes.shape({
-    writer: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
     copies: PropTypes.number.isRequired,
-    publisher: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
+    publisher: PropTypes.string.isRequired,
+    active_history: PropTypes.arrayOf(
       PropTypes.shape({
-        studentClassroom: PropTypes.number.isRequired,
-        studentName: PropTypes.string.isRequired,
-        studentLastName: PropTypes.string.isRequired,
-        repossessionDate: PropTypes.string.isRequired,
+        student: PropTypes.shape({
+          class_number: PropTypes.number.isRequired,
+          first_name: PropTypes.string.isRequired,
+          last_name: PropTypes.string.isRequired,
+        }),
+        return_date: PropTypes.string.isRequired,
       }),
     ).isRequired,
-    name: PropTypes.string.isRequired,
   }).isRequired,
 };
 
@@ -141,7 +153,7 @@ export default function CollapsibleTable({ rows }) {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                <Row key={row.name} row={row} />
+                <Row key={row.isbn} row={row} />
               ))}
           </TableBody>
         </Table>

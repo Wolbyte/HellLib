@@ -14,8 +14,8 @@ class Student(models.Model):
 
 class BorrowRecord(models.Model):
     is_returned = models.BooleanField()
-    book = models.OneToOneField(Book, on_delete=models.CASCADE)
-    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     return_date = models.DateField()
 
     def __str__(self):

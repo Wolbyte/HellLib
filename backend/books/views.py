@@ -2,6 +2,8 @@ from django.contrib.postgres.search import TrigramSimilarity
 from rest_framework import status
 from rest_framework.generics import ListAPIView, ListCreateAPIView
 from rest_framework.response import Response
+from users.models import BorrowRecord
+from users.serializers import BorrowRecordSerializer
 
 from .models import Book
 from .serializers import BookSerializer
@@ -11,7 +13,6 @@ class BooksAPIView(ListCreateAPIView):
     serializer_class = BookSerializer
 
     def perform_create(self, serializer: serializer_class):
-
         book = Book.objects.filter(
             title=serializer.validated_data["title"],
             publisher=serializer.validated_data["publisher"],
@@ -40,5 +41,17 @@ class SearchBooks(ListAPIView):
         )
 
         serializer = self.serializer_class(queryset, many=True)
+
+        for book in serializer.data:
+            history_queryset = BorrowRecord.objects.filter(
+                is_returned=False, book=book["id"]
+            )
+
+            history_serializer = BorrowRecordSerializer(
+                history_queryset,
+                many=True,
+            )
+
+            book["active_history"] = history_serializer.data
 
         return Response({"books": serializer.data}, status=status.HTTP_200_OK)

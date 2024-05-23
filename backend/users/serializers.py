@@ -15,3 +15,9 @@ class BorrowRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = BorrowRecord
         fields = "__all__"
+
+
+class BorrowRecordSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = BorrowRecord
+        exclude = ["is_returned"]

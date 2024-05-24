@@ -124,7 +124,7 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-export default function Virtualize() {
+export default function AutoCompleteInput(props) {
   const [options, setOptions] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
@@ -187,6 +187,7 @@ export default function Virtualize() {
       onChange={(_event, newValue) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
+        props.onChange(newValue);
       }}
       loadingText="درحال پردازش..."
       filterOptions={(x) => x}

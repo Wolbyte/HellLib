@@ -23,9 +23,9 @@ import Typography from "@mui/material/Typography";
 import BasicModal from "@/components/BasicModal";
 import { enToFaDigit } from "@/helpers";
 
-function Row(props) {
-  const { row } = props;
+function Row({ data }) {
   const [open, setOpen] = useState(false);
+  const [rowData, setRowData] = useState(data);
 
   return (
     <>
@@ -40,13 +40,13 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.title}
+          {rowData.title}
         </TableCell>
-        <TableCell>{row.author}</TableCell>
-        <TableCell>{row.publisher}</TableCell>
-        <TableCell>{enToFaDigit(row.copies.toString())}</TableCell>
+        <TableCell>{rowData.author}</TableCell>
+        <TableCell>{rowData.publisher}</TableCell>
+        <TableCell>{enToFaDigit(rowData.copies.toString())}</TableCell>
         <TableCell>
-          <BasicModal rowData={row.name} />
+          <BasicModal rowData={rowData} setRowData={setRowData} />
         </TableCell>
       </TableRow>
       <TableRow>
@@ -67,7 +67,7 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.active_history.map((data) => (
+                  {rowData.active_history.map((data) => (
                     <TableRow
                       key={`${data.return_date}${data.student.national_code}`}
                     >
@@ -95,7 +95,7 @@ function Row(props) {
 }
 
 Row.propTypes = {
-  row: PropTypes.shape({
+  data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     copies: PropTypes.number.isRequired,
@@ -153,7 +153,7 @@ export default function CollapsibleTable({ rows }) {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                <Row key={row.isbn} row={row} />
+                <Row key={row.isbn} data={row} />
               ))}
           </TableBody>
         </Table>

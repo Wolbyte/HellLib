@@ -3,7 +3,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import (CreateAPIView, ListAPIView,
                                      ListCreateAPIView)
-from rest_framework.request import Request
 from rest_framework.response import Response
 from users.models import BorrowRecord
 from users.serializers import (BorrowRecordSerializer,
@@ -16,7 +15,7 @@ from .serializers import BookSerializer
 class BooksAPIView(ListCreateAPIView):
     serializer_class = BookSerializer
 
-    def perform_create(self, serializer: serializer_class):
+    def perform_create(self, serializer):
         book = Book.objects.filter(
             title=serializer.validated_data["title"],
             publisher=serializer.validated_data["publisher"],
@@ -35,8 +34,8 @@ class BooksAPIView(ListCreateAPIView):
 class BorrowAPIView(CreateAPIView):
     serializer_class = BorrowRecordSerializerPost
 
-    def post(self, request: Request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.POST)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
 
         if not serializer.is_valid():
             return Response(

@@ -2,10 +2,10 @@ from django.contrib.postgres.search import TrigramSimilarity
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import (CreateAPIView, ListAPIView,
-                                     ListCreateAPIView, UpdateAPIView)
+                                     ListCreateAPIView)
 from rest_framework.request import Request
 from rest_framework.response import Response
-from users.models import BorrowRecord, Student
+from users.models import BorrowRecord
 from users.serializers import (BorrowRecordSerializer,
                                BorrowRecordSerializerPost)
 
@@ -84,6 +84,11 @@ def RepossessBook(_, pk: int):
     record.book.save()
 
     return Response(status=status.HTTP_200_OK)
+
+
+class ActiveBorrowRecords(ListAPIView):
+    serializer_class = BorrowRecordSerializer
+    queryset = BorrowRecord.objects.filter(is_returned=False)
 
 
 class SearchBooks(ListAPIView):

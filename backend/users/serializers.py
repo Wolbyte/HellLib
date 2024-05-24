@@ -1,3 +1,4 @@
+from books.serializers import BookSerializer
 from rest_framework import serializers
 
 from .models import BorrowRecord, Student
@@ -11,6 +12,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 class BorrowRecordSerializer(serializers.ModelSerializer):
     student = StudentSerializer(read_only=True)
+    book = BookSerializer(read_only=True)
 
     class Meta:
         model = BorrowRecord

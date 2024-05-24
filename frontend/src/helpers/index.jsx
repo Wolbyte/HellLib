@@ -9,3 +9,19 @@ export function faToEnDigit(s) {
     return String.fromCharCode(0xff & a.charCodeAt(0));
   });
 }
+
+export function getNestedKeys(obj, key) {
+  if (key in obj) {
+    return obj[key];
+  }
+  const keys = key.split(".");
+  let value = obj;
+  for (let i = 0; i < keys.length; i++) {
+    value = value[keys[i]];
+    if (value === undefined) {
+      break;
+    }
+  }
+
+  return value;
+}

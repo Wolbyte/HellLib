@@ -10,7 +10,9 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
-import { enToFaDigit } from "@/helpers";
+import { format } from "date-fns-jalali";
+
+import { enToFaDigit, getNestedKeys } from "@/helpers";
 
 function getRowsPerPage() {
   return [
@@ -21,9 +23,40 @@ function getRowsPerPage() {
   ];
 }
 
-export default function StickyHeaderTable({ rows, columns }) {
+function processRowValue(column, value) {
+  if (column.includes("date")) {
+    value = format(value, "yyyy-MM-dd");
+  }
+
+  return enToFaDigit(value);
+}
+
+function Row({ columns, row, actionFn, setRowList, rowList }) {
+  return (
+    <TableRow hover role="checkbox" tabIndex={-1} key={Math.random() * 9000000}>
+      {columns.map((column) => {
+        const value = getNestedKeys(row, column.id);
+        return (
+          <TableCell key={column.id} align={column.align}>
+            {column.format && typeof value === "number"
+              ? column.format(value)
+              : processRowValue(column.id, value.toString())}
+          </TableCell>
+        );
+      })}
+      {typeof actionFn == "function" ? (
+        <TableCell key="StickyHeaderTable-ACTIONFN_PROP">
+          {actionFn(row, rowList, setRowList)}
+        </TableCell>
+      ) : null}
+    </TableRow>
+  );
+}
+
+export default function StickyHeaderTable({ rows, columns, actionFn }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowList, setRowList] = useState(rows);
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
@@ -48,32 +81,22 @@ export default function StickyHeaderTable({ rows, columns }) {
                   {column.label}
                 </TableCell>
               ))}
+              {typeof actionFn == "function" ? <TableCell /> : null}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {rowList
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.studentLastName}
-                  >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : enToFaDigit(value.toString())}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+              .map((row) => (
+                <Row
+                  columns={columns}
+                  row={row}
+                  rowList={rowList}
+                  actionFn={actionFn}
+                  setRowList={setRowList}
+                  key={Math.random() * 99999999}
+                />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -87,7 +110,7 @@ export default function StickyHeaderTable({ rows, columns }) {
           return `${faFrom}–${faTo} از ${count !== -1 ? faCount : `+${faTo}`}`;
         }}
         component="div"
-        count={rows.length}
+        count={rowList.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

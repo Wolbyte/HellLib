@@ -37,7 +37,12 @@ export default function Home() {
       </Grid>
 
       <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" startIcon={<PersonIcon />} size="large">
+        <Button
+          variant="contained"
+          startIcon={<PersonIcon />}
+          size="large"
+          href="/register/student"
+        >
           نام‌نویسی دانش‌آموز
         </Button>
       </Grid>

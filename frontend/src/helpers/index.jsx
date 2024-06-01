@@ -5,8 +5,8 @@ export function enToFaDigit(s) {
 }
 
 export function faToEnDigit(s) {
-  return s.replace(/[\u06f0-\u06f9]/g, function (a) {
-    return String.fromCharCode(0xff & a.charCodeAt(0));
+  return s.replace(/[\u0660-\u0669\u06f0-\u06f9]/g, function (a) {
+    return a.charCodeAt(0) & 0xf;
   });
 }
 

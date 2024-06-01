@@ -64,9 +64,9 @@ class BorrowAPIView(CreateAPIView):
         serializer.validated_data["book"].copies -= 1
         serializer.validated_data["book"].save()
 
-        serializer.save()
+        record: BorrowRecord = serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(record.id, status=status.HTTP_201_CREATED)
 
 
 @api_view(["GET"])

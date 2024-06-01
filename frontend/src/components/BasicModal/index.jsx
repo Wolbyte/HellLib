@@ -119,9 +119,9 @@ export default function BasicModal({ rowData, setRowData }) {
                 }),
               });
 
-              if (res.status != 201) {
-                const resData = await res.json();
+              const resData = await res.json();
 
+              if (res.status != 201) {
                 if (resData["record"]) {
                   setErrorMessage("این دانش‌آموز قبلا کتاب را گرفته است!");
                 } else if (resData["book"]) {
@@ -134,6 +134,7 @@ export default function BasicModal({ rowData, setRowData }) {
               let newData = { ...rowData };
               newData.copies--;
               newData.active_history.push({
+                id: resData,
                 student: student,
                 return_date: returnDate,
                 book: rowData,

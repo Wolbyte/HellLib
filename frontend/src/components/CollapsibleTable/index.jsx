@@ -5,6 +5,7 @@ import { useState } from "react";
 import { format } from "date-fns-jalali";
 
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -64,6 +65,7 @@ function Row({ data }) {
                     <TableCell>کلاس</TableCell>
                     <TableCell>کد ملی</TableCell>
                     <TableCell>تاریخ بازپس گیری</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -81,6 +83,28 @@ function Row({ data }) {
                       </TableCell>
                       <TableCell>
                         {enToFaDigit(format(data.return_date, "yyyy-MM-dd"))}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          onClick={async () => {
+                            const res = await fetch(
+                              `/api/books/repossess/${data.id}`,
+                            );
+
+                            if (res.status != 200) return;
+
+                            let newData = { ...rowData };
+                            newData.copies += 1;
+                            newData.active_history =
+                              newData.active_history.filter(
+                                (history) => history.id != data.id,
+                              );
+
+                            setRowData(newData);
+                          }}
+                        >
+                          پس‌گرفتن
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

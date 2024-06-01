@@ -2,11 +2,14 @@
   python = pkgs.python311.withPackages (ps:
     with ps; [
       django
-      djangorestframework
       django-cors-headers
-      psycopg2
+      djangorestframework
       gunicorn
+      openpyxl
+      pandas
       pip
+      psycopg2
+      requests
     ]);
 in
   pkgs.mkShell {
